@@ -2,6 +2,21 @@
 #include <chrono>
 #include <iomanip>
 
+std::string utciso(std::chrono::time_point<std::chrono::system_clock> chrono_time){
+    std::stringstream ss;
+
+    // Extract seconds and microseconds
+    std::chrono::_V2::system_clock::duration timepoint = chrono_time.time_since_epoch();
+    std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(timepoint);
+    std::chrono::microseconds usec = std::chrono::duration_cast<std::chrono::microseconds>(timepoint - sec);
+
+    std::time_t time = std::chrono::system_clock::to_time_t(chrono_time);
+    ss << std::put_time(std::gmtime(&time), "%Y-%m-%dT%X");
+    ss << "." << std::setfill('0') << std::setw(6) << usec.count();
+
+    return ss.str();
+}
+
 int main()
 {
     std::chrono::time_point<std::chrono::system_clock> now_chrono = std::chrono::system_clock::now();
@@ -14,19 +29,8 @@ int main()
     std::cout << std::put_time(std::gmtime(&now_time), "%Y-%m-%dT%X") << std::endl;
     std::cout << std::endl;
 
-    // Extract seconds and microseconds
-    std::chrono::_V2::system_clock::duration timepoint = now_chrono.time_since_epoch();
-    std::chrono::seconds sec = std::chrono::duration_cast<std::chrono::seconds>(timepoint);
-    std::chrono::microseconds usec = std::chrono::duration_cast<std::chrono::microseconds>(timepoint - sec);
-    
     // Advanced print
     std::cout << "Advanced Print:" << std::endl;
-    std::ios cout_fmt(NULL);
-    cout_fmt.copyfmt(std::cout);
-
-    std::cout << std::put_time(std::gmtime(&now_time), "%Y-%m-%dT%X");
-    std::cout << "." << std::setfill('0') << std::setw(6) << usec.count() << std::endl;
-
-    std::cout.copyfmt(cout_fmt);
+    std::cout << utciso(std::chrono::system_clock::now()) << std::endl;
 
 }
