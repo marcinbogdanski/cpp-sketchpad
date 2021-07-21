@@ -1,0 +1,19 @@
+FROM ubuntu:18.04
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential=12.4ubuntu1 \
+    librabbitmq-dev=0.8.0-1ubuntu0.18.04.2
+
+COPY . /app
+WORKDIR /app
+
+RUN make
+
+ENTRYPOINT [ "bash" ]
+
+# Build like this:
+# docker build -t quick-test .
+
+# Run like this:
+# docker run -it rabbitmq-example guest 5671 1 1

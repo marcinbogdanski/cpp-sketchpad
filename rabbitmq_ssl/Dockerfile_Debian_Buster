@@ -1,0 +1,29 @@
+FROM python:3.9.6-slim
+
+# build-essential, cmake - required to build rabbitmq-c and streamcapturer
+# unzip, wget - required to download/unzip rabbitmq-c
+# libssl-dev - required to compile rabbitmq-c
+# librabbitmq-dev - DO NOT USE, package compiled w/o SSL support
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential=12.6 \
+    cmake=3.13.4-1 \
+    libssl-dev=1.1.1d-0+deb10u6 \
+    unzip=6.0-23+deb10u2 \
+    wget=1.20.1-1.1
+
+COPY ./get_build_install_rabbitmq.bash /root/get_build_install_rabbitmq.bash
+RUN /root/get_build_install_rabbitmq.bash
+
+COPY . /app
+WORKDIR /app
+
+RUN make
+
+ENTRYPOINT [ "/app/amqps_producer" ]
+
+# Build like this:
+# docker build -f Dockerfile_Debian_Buster -t rabbitmq-example .
+
+# Run like this:
+# docker run -it rabbitmq-example guest 5671 1 1
