@@ -11,21 +11,21 @@ class Pet {
 public:
     Pet(const std::string &name) : name(name) {
         std::cout << "constructor" << std::endl;
-        thread = std::jthread(&Pet::ThreadFunction, this);
+        thread = std::thread(&Pet::ThreadFunction, this);
     }
     ~Pet() {
-        thread.request_stop();
-        thread.join();    // technically optional because we use jthread?
+        stop_flag = true;
+        thread.join();
         std::cout << "destructor" << std::endl;
     }
     void setName(const std::string &name_) { name = name_; }
     const std::string &getName() const { return name; }
 private:
     std::string name;
-    std::jthread thread;
+    std::thread thread;
+    std::atomic_bool stop_flag{false};
     void ThreadFunction(){
-        auto stoken = thread.get_stop_token();
-        while (!stoken.stop_requested()){
+        while (!stop_flag){
             std::cout << "inside ThreadFunction" << std::endl;
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
