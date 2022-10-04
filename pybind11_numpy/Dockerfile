@@ -5,6 +5,7 @@ RUN apt-get update && \
     build-essential
 
 RUN pip install numpy
+RUN pip install pandas
 RUN pip install pybind11
 
 RUN useradd -ms /bin/bash appuser
@@ -13,6 +14,6 @@ USER appuser
 COPY --chown=appuser:appuser . /home/appuser/app
 WORKDIR /home/appuser/app
 
-RUN c++ -O3 -Wall -shared -std=c++11 -fPIC `python3 -m pybind11 --includes` example.cpp -o example`python3-config --extension-suffix`
+RUN make
 
 ENTRYPOINT [ "python", "main.py" ]

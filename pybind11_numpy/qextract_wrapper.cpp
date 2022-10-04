@@ -5,18 +5,23 @@
 #include "qextract_wrapper.hpp"
 
 
-any_array_type QExtractPythonWrapper::read_file(
+std::map<std::string, any_array_type> QExtractPythonWrapper::read_file(
     const std::string &tcap_filename,
     const std::vector<std::string> &symbols
 ) {
-    std::cout << "sizeof long" << sizeof(long) << std::endl;
 
-    // pybind11::array_t<long> nparray_double = create_dummy_long_array();
+    // TODO: read .tcap file here, depending on type (bar/tick/other)
+    //       create columns as numpy arrays (or vectors for strings)
+    //       and return map in form {"column_name" -> np_array}
 
-    std::vector<std::string> vector_string = create_dummy_string_vector();
+    std::map<std::string, any_array_type> result;
+    result["MyFloatColumn"] = create_dummy_double_array();
+    result["MyIntColumn"] = create_dummy_long_array();
+    result["MyStringColumn"] = create_dummy_string_vector();
+    result["MyDatetimeColumn"] = create_dummy_long_array();  // nanosecond ts
 
     // Return numpy array
-    return vector_string;
+    return result;
 
 }
 
