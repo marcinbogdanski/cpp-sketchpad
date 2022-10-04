@@ -10,4 +10,5 @@ data_dict = p.read_file(
     ["ALT"]                           # symbols
 )
 print(data_dict.shape)
+print(data_dict.dtype)
 print(data_dict)
