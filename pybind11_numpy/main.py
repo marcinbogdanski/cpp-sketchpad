@@ -9,6 +9,6 @@ data_dict = p.read_file(
     "BarRecord-20220913._1h.tcap",    # tcap_filename
     ["ALT"]                           # symbols
 )
-print(data_dict.shape)
-print(data_dict.dtype)
+#print(data_dict.shape)
+#print(data_dict.dtype)
 print(data_dict)

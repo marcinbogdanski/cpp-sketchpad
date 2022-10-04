@@ -5,44 +5,46 @@
 #include "qextract_wrapper.hpp"
 
 
-std::variant<pybind11::array_t<double>, pybind11::array_t<int>> QExtractPythonWrapper::read_file(
+any_array_type QExtractPythonWrapper::read_file(
     const std::string &tcap_filename,
     const std::vector<std::string> &symbols
 ) {
-    std::cout << "sizeof int" << sizeof(int) << std::endl;
+    std::cout << "sizeof long" << sizeof(long) << std::endl;
 
-    pybind11::array_t<int> nparray_double = create_dummy_int_array();
+    // pybind11::array_t<long> nparray_double = create_dummy_long_array();
+
+    std::vector<std::string> vector_string = create_dummy_string_vector();
 
     // Return numpy array
-    return nparray_double;
+    return vector_string;
 
 }
 
-pybind11::array_t<int> QExtractPythonWrapper::create_dummy_int_array() {
+np_long_arr QExtractPythonWrapper::create_dummy_long_array() {
     // Create and populate dumb C array
     size_t size = 100;
-    int *foo = new int[size];
+    long *foo = new long[size];
     for (size_t i = 0; i < size; i++) {
-        foo[i] = (int) i;
+        foo[i] = (long) i;
     }
 
     // Create Python object that will free memory when destroyed
     pybind11::capsule free_when_done(foo, [](void *f) {
-        int *foo = reinterpret_cast<int *>(f);
+        long *foo = reinterpret_cast<long *>(f);
         std::cerr << "freeing memory @ " << f << "\n";
         delete[] foo;
     });
 
     // Return numpy array
-    return pybind11::array_t<int>(
-        {100},          // shape
-        {4},            // element size
-        foo,            // data pointer
-        free_when_done  // pseudo destructor
+    return pybind11::array_t<long>(
+        {100},           // shape
+        {sizeof(long)},  // element size
+        foo,             // data pointer
+        free_when_done   // pseudo destructor
     );
 }
 
-pybind11::array_t<double> QExtractPythonWrapper::create_dummy_double_array() {
+np_double_arr QExtractPythonWrapper::create_dummy_double_array() {
     // Create and populate dumb C array
     size_t size = 100;
     double *foo = new double[size];
@@ -59,9 +61,18 @@ pybind11::array_t<double> QExtractPythonWrapper::create_dummy_double_array() {
 
     // Return numpy array
     return pybind11::array_t<double>(
-        {100},          // shape
-        {8},            // element size
-        foo,            // data pointer
-        free_when_done  // pseudo destructor
+        {100},             // shape
+        {sizeof(double)},  // element size
+        foo,               // data pointer
+        free_when_done     // pseudo destructor
     );
+}
+
+cpp_str_vect QExtractPythonWrapper::create_dummy_string_vector(){
+    std::vector<std::string> result;
+    size_t size = 100;
+    for (size_t i = 0; i < size; i++){
+        result.push_back(std::to_string(i));
+    }
+    return result;
 }
