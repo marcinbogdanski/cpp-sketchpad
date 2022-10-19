@@ -44,6 +44,10 @@ public:
 
     }
 
+    bool do_check(std::string CI){
+        return this->py_in_flight.contains(py::cast(CI));
+    }
+
     void print_dict() const {
 
         std::cout << "---vv----vv---" << std::endl;
@@ -87,6 +91,7 @@ PYBIND11_MODULE(example, m) {
         .def(py::init<py::dict &>())
         .def("assign_mini_item", &MyClass::assign_mini_item)
         .def("assign_item", &MyClass::assign_item)
+        .def("do_check", &MyClass::do_check)
         .def("print_dict", &MyClass::print_dict);
 }
 

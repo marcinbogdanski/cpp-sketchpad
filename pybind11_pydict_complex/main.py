@@ -46,6 +46,10 @@ p.assign_item("2022010100000012")
 print(json.dumps(in_flight, indent=2))
 
 print("-"*80)
+print(p.do_check("2022010100000012"))
+print(p.do_check("2022010100000xxx"))
+
+print("-"*80)
 print(id(in_flight["2022010100000009"]))
 print(id(in_flight["2022010100000011"]))
 print(id(in_flight["2022010100000012"]))
