@@ -29,7 +29,7 @@ private:
         while (!stop_flag){
             // Crash on third iteration
             if (i == 3 && this->name == "Molly"){
-                *(char *)0 = 0;
+                *(char *)0 = 0;     // causes Segmentation Fault, no exit code
             }
             std::cout << "inside ThreadFunction " << this->name << std::endl;
             std::this_thread::sleep_for(std::chrono::seconds(1));
